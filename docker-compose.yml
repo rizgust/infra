@@ -1,0 +1,39 @@
+version: '3'
+services:
+  redis:
+    image: redis:latest
+    command: redis-server
+    volumes:
+      - ./docker-db-redis/:/var/lib/redis
+      - ./docker-db-redis/config/:/usr/local/etc/redis/redis.conf
+    ports:
+      - 6379:6379
+  my:
+    image: "mysql:5.7"
+    container_name: "local-db-my"
+    environment:
+      MYSQL_ROOT_PASSWORD: local
+    volumes:
+      - ./docker-db-my/:/var/lib/mysql
+    ports:
+      - "3306:3306"
+  pg:
+    image: "postgis/postgis:15-3.3"
+    container_name: local-db-pg
+    ports:
+      - 5432:5432
+    volumes:
+      - ./docker-db-pg/:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: local
+      POSTGRES_PASSWORD: local
+  mssql:
+    container_name: local-db-mssql
+    image: mcr.microsoft.com/mssql/server
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./docker-db-mssql:/var/opt/mssql/data 
+    environment:
+      SA_PASSWORD: "l0calP@@SS"
+      ACCEPT_EULA: "Y"
